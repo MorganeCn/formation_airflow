@@ -42,8 +42,7 @@ def calculate_rsi(prices):
     return rsi
 
 # Fonction pour traiter les données
-def process_data(**kwargs):
-    ti = kwargs['ti']
+def process_data(ti):
     market_data = ti.xcom_pull(task_ids='extract_bitcoin_price')
 
     prices = [day['current_price']['usd'] for day in market_data]
@@ -59,8 +58,7 @@ def process_data(**kwargs):
     return processed_data
 
 # Fonction pour créer un DataFrame
-def create_dataframe(**kwargs):
-    ti = kwargs['ti']
+def create_dataframe(ti):
     processed_data = ti.xcom_pull(task_ids='process_data')
     market_data = processed_data['market_data']
 
@@ -75,8 +73,7 @@ def create_dataframe(**kwargs):
     ti.xcom_push(key='dataframe', value=df.to_dict(orient='records'))
 
 # Fonction pour calculer les moyennes de prix hebdomadaires
-def calculate_weekly_average(**kwargs):
-    ti = kwargs['ti']
+def calculate_weekly_average(ti):
     df_records = ti.xcom_pull(task_ids='create_dataframe', key='dataframe')
     df = pd.DataFrame.from_records(df_records)
 
@@ -90,8 +87,7 @@ def calculate_weekly_average(**kwargs):
     return weekly_avg.to_dict(orient='records')
 
 # Fonction pour stocker les données (simuler l'enregistrement)
-def store_data(**kwargs):
-    ti = kwargs['ti']
+def store_data(ti):
     processed_data = ti.xcom_pull(task_ids='process_data')
     logging.info(f"Storing data: {processed_data}")
 
