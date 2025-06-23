@@ -13,8 +13,7 @@ def extract_bitcoin_price(**kwargs):
     return bitcoin_data
 
 # Fonction pour traiter les données
-def process_data(**kwargs):
-    ti = kwargs['ti']
+def process_data(ti):
     bitcoin_data = ti.xcom_pull(task_ids='extract_bitcoin_price')
     processed_data = {
         'usd': bitcoin_data['usd'],
@@ -23,8 +22,7 @@ def process_data(**kwargs):
     return processed_data
 
 # Fonction pour stocker les données (simuler l'enregistrement)
-def store_data(**kwargs):
-    ti = kwargs['ti']
+def store_data(ti):
     processed_data = ti.xcom_pull(task_ids='process_data')
     logging.info(f"Storing data: {processed_data}")
 
