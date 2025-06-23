@@ -42,8 +42,7 @@ def calculate_rsi(prices):
     return rsi
 
 # Fonction pour traiter les données
-def process_data(**kwargs):
-    ti = kwargs['ti']
+def process_data(ti):
     market_data = ti.xcom_pull(task_ids='extract_bitcoin_price')
 
     # Extraire les prix en USD pour le calcul du RSI
@@ -62,8 +61,7 @@ def process_data(**kwargs):
     return processed_data
 
 # Fonction pour stocker les données (simuler l'enregistrement)
-def store_data(**kwargs):
-    ti = kwargs['ti']
+def store_data(ti):
     processed_data = ti.xcom_pull(task_ids='process_data')
     logging.info(f"Storing data: {processed_data}")
 
