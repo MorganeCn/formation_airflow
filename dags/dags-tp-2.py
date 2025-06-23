@@ -5,8 +5,7 @@ import requests
 import logging
 
 # Fonction pour extraire le prix historique du Bitcoin
-def extract_bitcoin_price(**kwargs):
-    execution_date = kwargs['execution_date']
+def extract_bitcoin_price(execution_date):
     formatted_date = execution_date.strftime('%d-%m-%Y')  # Format de la date
     url = f"https://api.coingecko.com/api/v3/coins/bitcoin/history?date={formatted_date}&localization=false"
     response = requests.get(url)
@@ -15,8 +14,7 @@ def extract_bitcoin_price(**kwargs):
     return market_data
 
 # Fonction pour traiter les données
-def process_data(**kwargs):
-    ti = kwargs['ti']
+def process_data(ti):
     market_data = ti.xcom_pull(task_ids='extract_bitcoin_price')
     processed_data = {
         'prix en usd': market_data['current_price']['usd'],
@@ -25,8 +23,7 @@ def process_data(**kwargs):
     return processed_data
 
 # Fonction pour stocker les données (simuler l'enregistrement)
-def store_data(**kwargs):
-    ti = kwargs['ti']
+def store_data(ti):
     processed_data = ti.xcom_pull(task_ids='process_data')
     logging.info(f"Storing data: {processed_data}")
 
